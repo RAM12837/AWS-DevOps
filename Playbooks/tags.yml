@@ -1,0 +1,17 @@
+---
+# to run this we need to use command 'ansible-playbook tag.yml --tag tag_name'
+- hosts: localhost
+  become: yes
+  tasks:
+     - name: Install httpd package
+       yum: name=httpd state=installed
+       tags: install
+
+     - name: copy index.html
+       copy: src=../files/index.html  dest=/var/www/html
+       tags: copy
+
+     - name: start httpd service
+       service: name=httpd state=started
+       tags: always
+

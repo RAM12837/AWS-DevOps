@@ -1,0 +1,8 @@
+---
+- hosts: myservers
+  become: yes
+  tasks:
+    - name: show Os family
+      debug:
+        msg: "This server belongs to the '{{ansible_facts['os_family']}}' family."
+

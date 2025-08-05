@@ -1,0 +1,8 @@
+---
+- hosts: managedNode
+  become: yes
+  remote_user: ec2-user
+  gather_facts: no
+  tasks:
+      - include: copy.yml
+      - include: service.yml

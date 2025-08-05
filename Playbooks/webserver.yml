@@ -1,0 +1,16 @@
+---
+- hosts: myservers
+  become: yes
+  tasks:
+    - name: Install httpd in managed Node
+      yum:
+        name: httpd
+        state: present 
+    - name: copy index.html
+      copy:
+        src: index.html
+        dest: /var/www/html
+    - name: start httpd service
+      service:
+        name: httpd
+        state: started

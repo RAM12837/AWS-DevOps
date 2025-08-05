@@ -1,0 +1,9 @@
+---
+- hosts: managedNode
+  become: yes
+  tasks:
+    - name: copy file in managedNode using template module with varibale change
+      template:
+        src: ../template/temp.j2
+        dest: /etc/temp.j2
+

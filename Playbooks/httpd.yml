@@ -1,0 +1,46 @@
+---
+- name: Setup Apache HTTPD and deploy index.html
+  hosts: managedNode
+  become: yes
+
+  tasks:
+    - name: Install Apache (httpd)
+      yum:
+        name: httpd
+        state: present
+
+    - name: Start and enable httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Copy index.html to web root
+      copy:
+        src: ../files/index.html
+        dest: /var/www/html/index.html
+        mode: '0644'
+    - name: Install firewalld and Python bindings
+      yum:
+        name:
+          - firewalld
+          - python3-firewall
+        state: present
+
+    - name: Start and enable firewalld
+      service:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Allow HTTP traffic in firewall (if using firewalld)
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+        immediate: yes
+      when: ansible_facts['distribution'] == "Amazon"
+
+    - name: Ensure SELinux allows httpd to serve files (optional)
+      command: setsebool -P httpd_read_user_content 1
+      when: ansible_facts['selinux']['status'] == "enabled"
